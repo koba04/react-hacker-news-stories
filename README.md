@@ -1,8 +1,19 @@
 # React HackerNews Stories
 
-React sample app using HackerNews API for #html5j.
+Livecoding at React.js meetup #1
+
+http://reactjs-meetup.connpass.com/event/11232/
+
+## run
 
 ```
 npm install
-npm run
+npm start
 ```
+
+## requires
+
+Promise Support
+
+* http://caniuse.com/#feat=promises
+

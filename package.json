@@ -1,11 +1,9 @@
 {
-  "name": "react-hacker-news-stories",
+  "name": "meetup",
   "version": "0.1.0",
-  "description": "React sample app using HackerNews API",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production browserify -d index.js -o public/bundle.js",
     "watch": "watchify index.js -dv -o public/bundle.js",
     "browser": "browser-sync start --files public/* --server public",
     "start": "npm run watch & npm run browser"
@@ -18,13 +16,14 @@
   "author": "koba04",
   "license": "MIT",
   "dependencies": {
-    "react": "^0.13.1",
+    "immutable": "^3.7.2",
+    "react": "^0.13.2",
     "whatwg-fetch": "^0.7.0"
   },
   "devDependencies": {
     "babelify": "^6.0.2",
     "browser-sync": "^2.6.4",
     "browserify": "^9.0.8",
-    "watchify": "^3.1.1"
+    "watchify": "^3.1.2"
   }
 }
