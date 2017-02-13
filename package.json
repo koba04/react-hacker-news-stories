@@ -1,8 +1,8 @@
 {
   "name": "react-hacker-news-stories",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "React sample app using HackerNews API",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack -p",
