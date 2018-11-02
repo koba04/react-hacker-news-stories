@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
-import { Story } from "../hackerNews";
+import { Story, filterStories, fetchHackerNews } from "../hackerNews";
 
 const Main = styled.main`
   display: flex;
@@ -45,41 +45,20 @@ class App extends React.Component<Props, State> {
       filterText: ""
     };
     this.handleFilter = this.handleFilter.bind(this);
-    this.filterStories = this.filterStories.bind(this);
   }
   componentDidMount() {
-    fetch("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
-      .then(res => res.json())
-      .then(ids => {
-        ids.slice(0, this.props.count).forEach((id: number, index: number) => {
-          fetch(
-            `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`
-          )
-            .then(res => res.json())
-            .then(story => {
-              story.rank = index + 1;
-              this.setState({
-                stories: this.state.stories
-                  .concat([story])
-                  .sort((a, b) => a.rank - b.rank)
-              });
-            });
-        });
-      });
+    fetchHackerNews(this.props.count).then(stories =>
+      this.setState({ stories })
+    );
   }
   handleFilter(input: string) {
     this.setState({ filterText: input });
   }
-  filterStories() {
-    const filterText = this.state.filterText.toLowerCase();
-    return this.state.stories.filter(
-      story =>
-        !filterText ||
-        story.title.toLowerCase().indexOf(filterText) !== -1 ||
-        story.by.toLowerCase().indexOf(filterText) !== -1
-    );
-  }
   render() {
+    const filteredStories = filterStories(
+      this.state.stories,
+      this.state.filterText
+    );
     return (
       <Main>
         <Header>
@@ -92,7 +71,7 @@ class App extends React.Component<Props, State> {
           />
         </InputBox>
         <ListBox>
-          <HNStories stories={this.filterStories()} />
+          <HNStories stories={filteredStories} />
         </ListBox>
       </Main>
     );
