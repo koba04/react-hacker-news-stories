@@ -1,29 +1,32 @@
 import React from "react";
+import styled from "styled-components";
+
 import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
 import { Story } from "../hackerNews";
 
-const style = {
-  root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    width: 900
-  },
-  title: {
-    flexBasis: 500,
-    alignSelf: "center",
-    padding: 10
-  },
-  filter: {
-    flexBasis: 400,
-    alignSelf: "center"
-  },
-  stories: {
-    flexBasis: 900,
-    alignSelf: "center"
-  }
-};
+const Main = styled.main`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 900px;
+`;
+
+const Header = styled.header`
+  flex-basis: 500px;
+  align-self: center;
+  padding: 10px;
+`;
+
+const InputBox = styled.div`
+  flex-basis: 400px;
+  align-self: center;
+`;
+
+const ListBox = styled.div`
+  flex-basis: 900px;
+  align-self: center;
+`;
 
 interface Props {
   count: number;
@@ -78,20 +81,20 @@ class App extends React.Component<Props, State> {
   }
   render() {
     return (
-      <div style={style.root as any}>
-        <div style={style.title}>
+      <Main>
+        <Header>
           <h1>HackerNews Stories</h1>
-        </div>
-        <div style={style.filter}>
+        </Header>
+        <InputBox>
           <InputFilter
             value={this.state.filterText}
             onChange={this.handleFilter}
           />
-        </div>
-        <div style={style.stories}>
+        </InputBox>
+        <ListBox>
           <HNStories stories={this.filterStories()} />
-        </div>
-      </div>
+        </ListBox>
+      </Main>
     );
   }
 }

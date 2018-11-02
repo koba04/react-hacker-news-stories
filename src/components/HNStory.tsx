@@ -1,30 +1,33 @@
 import React from "react";
+import styled from "styled-components";
 import { Story } from "../hackerNews";
 
-const style = {
-  story: {
-    display: "flex",
-    flexBasis: 900
-  },
-  rank: {
-    fontSize: "2em",
-    flexBasis: 50,
-    textAlign: "center",
-    padding: 5
-  },
-  title: {
-    fontSize: "1.2em",
-    alignSelf: "center",
-    flexBasis: 550
-  },
-  info: {
-    margin: 5,
-    alignSelf: "center"
-  },
-  infoItem: {
-    margin: "0 5px"
-  }
-};
+const StoryBox = styled.div`
+  display: flex;
+  flex-basis: 900px;
+`;
+
+const Rank = styled.div`
+  font-size: 2em;
+  flex-basis: 50px;
+  text-align: center;
+  padding: 5px;
+`;
+
+const Title = styled.div`
+  font-size: 1.2em;
+  align-self: center;
+  flex-basis: 550px;
+`;
+
+const InfoBox = styled.div`
+  margin: 5px;
+  align-self: center;
+`;
+
+const InfoItem = styled.span`
+  margin: "0 5px";
+`;
 
 interface Props {
   story: Story;
@@ -34,22 +37,22 @@ const HNStory = (props: Props) => {
   const { rank, url, title, by, kids } = props.story;
   const commentCount = kids ? kids.length : 0;
   return (
-    <div style={style.story}>
-      <div style={style.rank as any}>{rank}</div>
-      <div style={style.title}>{title}</div>
-      <div style={style.info}>
-        <span style={style.infoItem}>by {by}</span>
-        <span style={style.infoItem}>
+    <StoryBox>
+      <Rank>{rank}</Rank>
+      <Title>{title}</Title>
+      <InfoBox>
+        <InfoItem>>by {by}</InfoItem>
+        <InfoItem>
           {commentCount}
           comments
-        </span>
-        <span style={style.infoItem}>
+        </InfoItem>
+        <InfoItem>
           <a href={url} rel="noopener noreferrer" target="_blank">
             link
           </a>
-        </span>
-      </div>
-    </div>
+        </InfoItem>
+      </InfoBox>
+    </StoryBox>
   );
 };
 export default HNStory;
