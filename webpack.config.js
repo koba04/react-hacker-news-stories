@@ -1,21 +1,25 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: './app.js',
+  entry: {
+    index: "./src/index.tsx"
+  },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, "public"),
+    filename: "bundle.js"
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: ['babel-loader']
+        test: /\.tsx?/,
+        use: "ts-loader"
       }
     ]
   },
-  devServer: {
-    contentBase: path.resolve(__dirname, 'public')
+  resolve: {
+    extensions: [".js", ".ts", ".tsx"]
   },
-  devtool: 'source-map'
-}
+  devServer: {
+    contentBase: "./public"
+  }
+};

@@ -1,6 +1,11 @@
-import React from 'react';
+import React from "react";
 
-export default function InputFilter(props) {
+interface Props {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const InputFilter = (props: Props) => {
   return (
     <div>
       <input
@@ -11,8 +16,5 @@ export default function InputFilter(props) {
       />
     </div>
   );
-}
-InputFilter.propTypes = {
-  value: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func.isRequired,
 };
+export default InputFilter;
