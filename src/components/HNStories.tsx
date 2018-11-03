@@ -8,11 +8,11 @@ interface Props {
 
 const HNStories = (props: Props) => {
   return (
-    <div>
+    <section>
       {props.stories.map(story => (
         <HNStory key={story.id} story={story} />
       ))}
-    </div>
+    </section>
   );
 };
 export default HNStories;

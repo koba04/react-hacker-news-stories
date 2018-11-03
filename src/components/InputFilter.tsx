@@ -10,7 +10,7 @@ const InputFilter = (props: Props) => {
     <div>
       <input
         type="text"
-        placeholder="filter"
+        placeholder="input text for filtering"
         value={props.value}
         onChange={e => props.onChange(e.target.value)}
       />

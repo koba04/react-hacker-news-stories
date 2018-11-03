@@ -4,7 +4,6 @@ import { Story } from "../hackerNews";
 
 const StoryBox = styled.div`
   display: flex;
-  flex-basis: 900px;
 `;
 
 const Rank = styled.div`
@@ -21,12 +20,13 @@ const Title = styled.div`
 `;
 
 const InfoBox = styled.div`
-  margin: 5px;
+  padding: 5px;
   align-self: center;
 `;
 
 const InfoItem = styled.span`
-  margin: "0 5px";
+  display: inline-block;
+  padding: 0 2px;
 `;
 
 interface Props {
@@ -41,7 +41,7 @@ const HNStory = (props: Props) => {
       <Rank>{rank}</Rank>
       <Title>{title}</Title>
       <InfoBox>
-        <InfoItem>>by {by}</InfoItem>
+        <InfoItem>by {by}</InfoItem>
         <InfoItem>
           {commentCount}
           comments

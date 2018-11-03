@@ -5,27 +5,31 @@ import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
 import { Story, filterStories, fetchHackerNews } from "../hackerNews";
 
-const Main = styled.main`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  width: 900px;
+const Container = styled.main`
+  margin: 0 auto;
 `;
 
 const Header = styled.header`
-  flex-basis: 500px;
-  align-self: center;
-  padding: 10px;
+  max-width: 900px;
+  display: flex;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
 `;
 
-const InputBox = styled.div`
-  flex-basis: 400px;
-  align-self: center;
+const HeaderTitle = styled.h1`
+  flex-grow: 1;
+  margin: 10px;
 `;
 
-const ListBox = styled.div`
+const InputContainer = styled(InputFilter)`
+  flex-basis: 100px;
+  align-self: right;
+  margin: 10px;
+`;
+
+const HNStoriesContainer = styled(HNStories)`
   flex-basis: 900px;
-  align-self: center;
 `;
 
 interface Props {
@@ -60,20 +64,16 @@ class App extends React.Component<Props, State> {
       this.state.filterText
     );
     return (
-      <Main>
+      <Container>
         <Header>
-          <h1>HackerNews Stories</h1>
-        </Header>
-        <InputBox>
-          <InputFilter
+          <HeaderTitle>HackerNews Stories</HeaderTitle>
+          <InputContainer
             value={this.state.filterText}
             onChange={this.handleFilter}
           />
-        </InputBox>
-        <ListBox>
-          <HNStories stories={filteredStories} />
-        </ListBox>
-      </Main>
+        </Header>
+        <HNStoriesContainer stories={filteredStories} />
+      </Container>
     );
   }
 }
