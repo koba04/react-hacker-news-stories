@@ -55,4 +55,5 @@ const HNStory = (props: Props) => {
     </StoryBox>
   );
 };
-export default HNStory;
+// @ts-ignore
+export default React.memo(HNStory);

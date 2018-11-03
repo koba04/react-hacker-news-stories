@@ -1,9 +1,14 @@
-import React from "react";
+// @ts-ignore
+import React, { Suspense, useState } from "react";
+// @ts-ignore
+import { unstable_createResource as createResource } from "react-cache";
+// import { scheduleCallback} from 'schedule';
+
 import styled from "styled-components";
 
 import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
-import { Story, filterStories, fetchHackerNews } from "../hackerNews";
+import { filterStories, fetchHackerNews } from "../hackerNews";
 
 const Container = styled.main`
   margin: 0 auto;
@@ -36,45 +41,41 @@ interface Props {
   count: number;
 }
 
-interface State {
-  stories: Story[];
-  filterText: string;
-}
+const hackerNewsResource = createResource((count: number) =>
+  fetchHackerNews(count)
+);
 
-class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      stories: [],
-      filterText: ""
-    };
-    this.handleFilter = this.handleFilter.bind(this);
+// @ts-ignore
+const HNStoriesResource = React.memo(
+  (props: { count: number; filterText: string }) => {
+    const stories = hackerNewsResource.read(props.count);
+    const filteredStories = filterStories(stories, props.filterText);
+    return <HNStoriesContainer stories={filteredStories} />;
   }
-  componentDidMount() {
-    fetchHackerNews(this.props.count).then(stories =>
-      this.setState({ stories })
-    );
-  }
-  handleFilter(input: string) {
-    this.setState({ filterText: input });
-  }
-  render() {
-    const filteredStories = filterStories(
-      this.state.stories,
-      this.state.filterText
-    );
-    return (
-      <Container>
-        <Header>
-          <HeaderTitle>HackerNews Stories</HeaderTitle>
-          <InputContainer
-            value={this.state.filterText}
-            onChange={this.handleFilter}
-          />
-        </Header>
-        <HNStoriesContainer stories={filteredStories} />
-      </Container>
-    );
-  }
-}
+);
+
+const defer = requestAnimationFrame;
+
+const App = (props: Props) => {
+  const [filterText, setFilterText] = useState("");
+  const [inputFilterText, setInputFilterText] = useState("");
+
+  return (
+    <Container>
+      <Header>
+        <HeaderTitle>HackerNews Stories</HeaderTitle>
+        <InputContainer
+          value={inputFilterText}
+          onChange={value => {
+            setInputFilterText(value);
+            defer(() => setFilterText(value));
+          }}
+        />
+      </Header>
+      <Suspense fallback="loading..." maxDuration={2000}>
+        <HNStoriesResource count={props.count} filterText={filterText} />
+      </Suspense>
+    </Container>
+  );
+};
 export default App;
