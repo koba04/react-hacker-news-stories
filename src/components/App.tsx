@@ -6,9 +6,13 @@ import { unstable_createResource as createResource } from "react-cache";
 
 import styled from "styled-components";
 
-import HNStories from "./HNStories";
+// import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
 import { filterStories, fetchHackerNews } from "../hackerNews";
+
+// This is only for proof ofconcept for React.lazy
+// @ts-ignore
+const HNStories = React.lazy(() => import("./HNStories"));
 
 const Container = styled.main`
   margin: 0 auto;
