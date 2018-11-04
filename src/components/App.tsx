@@ -4,7 +4,6 @@ import { unstable_createResource as createResource } from "react-cache";
 
 import styled from "styled-components";
 
-// import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
 import { filterStories, fetchHackerNews, Story } from "../hackerNews";
 
