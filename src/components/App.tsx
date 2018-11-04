@@ -1,6 +1,4 @@
-// @ts-ignore
-import React, { Suspense, useState } from "react";
-// @ts-ignore
+import React, { Suspense, useState, memo } from "react";
 import { unstable_createResource as createResource } from "react-cache";
 // import { scheduleCallback} from 'schedule';
 
@@ -8,11 +6,11 @@ import styled from "styled-components";
 
 // import HNStories from "./HNStories";
 import InputFilter from "./InputFilter";
-import { filterStories, fetchHackerNews } from "../hackerNews";
+import { filterStories, fetchHackerNews, Story } from "../hackerNews";
 
 // This is only for proof ofconcept for React.lazy
-// @ts-ignore
-const HNStories = React.lazy(() => import("./HNStories"));
+import HNStories from "./HNStories";
+const HNStoriesLazy = React.lazy<typeof HNStories>(() => import("./HNStories"));
 
 const Container = styled.main`
   margin: 0 auto;
@@ -37,24 +35,19 @@ const InputContainer = styled(InputFilter)`
   margin: 10px;
 `;
 
-const HNStoriesContainer = styled(HNStories)`
-  flex-basis: 900px;
-`;
-
 interface Props {
   count: number;
 }
 
-const hackerNewsResource = createResource((count: number) =>
+const hackerNewsResource = createResource<Story[]>((count: number) =>
   fetchHackerNews(count)
 );
 
-// @ts-ignore
-const HNStoriesResource = React.memo(
+const HNStoriesResource = memo(
   (props: { count: number; filterText: string }) => {
     const stories = hackerNewsResource.read(props.count);
     const filteredStories = filterStories(stories, props.filterText);
-    return <HNStoriesContainer stories={filteredStories} />;
+    return <HNStoriesLazy stories={filteredStories} />;
   }
 );
 
