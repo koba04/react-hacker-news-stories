@@ -3,7 +3,14 @@ import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
 import HNStories from "./HNStories";
-import { filterStories, fetchHackerNews, Story } from "../hackerNews";
+import {
+  filterStories,
+  fetchHackerNews,
+  fetchHackerNewsComments,
+  Story,
+  Comment
+} from "../hackerNews";
+import HNComment from "./HNComment";
 
 const Container = styled.main`
   margin: 0 auto;
@@ -35,6 +42,7 @@ interface Props {
 interface State {
   filterText: string;
   stories: Story[];
+  comments: Comment[];
 }
 
 class App extends React.Component<Props, State> {
@@ -42,7 +50,8 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       filterText: "",
-      stories: []
+      stories: [],
+      comments: []
     };
     this.onChangeFilterText = this.onChangeFilterText.bind(this);
   }
@@ -55,7 +64,7 @@ class App extends React.Component<Props, State> {
     this.setState({ filterText });
   }
   render() {
-    const { stories, filterText } = this.state;
+    const { stories, filterText, comments } = this.state;
     return (
       <Container>
         <Header>
@@ -65,7 +74,22 @@ class App extends React.Component<Props, State> {
             onChange={this.onChangeFilterText}
           />
         </Header>
-        <HNStories stories={filterStories(stories, filterText)} />
+        <HNStories
+          stories={filterStories(stories, filterText)}
+          onClickComment={(story: Story) => {
+            fetchHackerNewsComments(story.kids).then(comments => {
+              this.setState({ comments }, () => {
+                window.scrollTo(0, 0);
+              });
+            });
+          }}
+        />
+        {comments.length > 0 && (
+          <HNComment
+            onClose={() => this.setState({ comments: [] })}
+            comments={comments}
+          />
+        )}
       </Container>
     );
   }
