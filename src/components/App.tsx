@@ -79,7 +79,7 @@ const App = (props: Props) => {
           }}
         />
       </Header>
-      <Suspense fallback="Now Loading...">
+      <Suspense fallback="Now Loading..." maxDuration={2000}>
         <HNStoriesWithResource
           count={props.count}
           filterText={filterText}
@@ -87,7 +87,12 @@ const App = (props: Props) => {
         />
       </Suspense>
       {commentIds.length > 0 && (
-        <HNComment commentIds={commentIds} onClose={() => setCommentIds([])} />
+        <Suspense fallback="Loading!!!" maxDuration={2000}>
+          <HNComment
+            commentIds={commentIds}
+            onClose={() => setCommentIds([])}
+          />
+        </Suspense>
       )}
     </Container>
   );

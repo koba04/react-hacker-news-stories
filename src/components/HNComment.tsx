@@ -55,36 +55,30 @@ const commentsResource = createResource<Comment[]>(
   ids => ids.sort().join()
 );
 
-const HNCommentWrapper = ({ onClose, commentIds }: Props) => (
-  <ModalWrapper onClick={onClose}>
-    <ModalContent>
-      <Suspense fallback="Loading!!!" maxDuration={1000}>
-        <HNComment commentIds={commentIds} onClose={onClose} />
-      </Suspense>
-      <ButtonArea>
-        <CloseButton onClick={onClose}>close</CloseButton>
-      </ButtonArea>
-    </ModalContent>
-  </ModalWrapper>
-);
-
 const HNComment = ({ commentIds, onClose }: Props) => {
   const comments = commentsResource.read(commentIds);
   return (
-    <ul>
-      {comments &&
-        comments.map(comment => (
-          <li key={comment.id}>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: `${comment.text} (by ${comment.by})`
-              }}
-            />
-            <hr />
-          </li>
-        ))}
-    </ul>
+    <ModalWrapper onClick={onClose}>
+      <ModalContent>
+        <ul>
+          {comments &&
+            comments.map(comment => (
+              <li key={comment.id}>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: `${comment.text} (by ${comment.by})`
+                  }}
+                />
+                <hr />
+              </li>
+            ))}
+        </ul>
+        <ButtonArea>
+          <CloseButton onClick={onClose}>close</CloseButton>
+        </ButtonArea>
+      </ModalContent>
+    </ModalWrapper>
   );
 };
 
-export default HNCommentWrapper;
+export default HNComment;
