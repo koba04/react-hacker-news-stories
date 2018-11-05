@@ -7,6 +7,12 @@ export interface Story {
   kids: [];
 }
 
+export interface Comment {
+  id: number;
+  by: string;
+  text: string;
+}
+
 export const fetchHackerNews = async (count: number): Promise<Story[]> => {
   const ids = await fetch(
     "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
@@ -24,6 +30,18 @@ export const fetchHackerNews = async (count: number): Promise<Story[]> => {
   );
   console.log(stories);
   return stories.sort((a: Story, b: Story) => a.rank - b.rank);
+};
+
+export const fetchHackerNewsComments = async (
+  commentIds: number[]
+): Promise<Comment[]> => {
+  return Promise.all(
+    commentIds.map(commentId =>
+      fetch(
+        `https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`
+      ).then(res => res.json())
+    )
+  );
 };
 
 export const filterStories = (

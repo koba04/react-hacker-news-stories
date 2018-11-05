@@ -31,6 +31,7 @@ const InfoItem = styled.span`
 
 interface Props {
   story: Story;
+  onClickComment: (story: Story) => void;
 }
 
 const HNStory = (props: Props) => {
@@ -43,8 +44,23 @@ const HNStory = (props: Props) => {
       <InfoBox>
         <InfoItem>by {by}</InfoItem>
         <InfoItem>
-          {commentCount}
-          comments
+          {commentCount ? (
+            <a
+              href=""
+              onClick={e => {
+                e.preventDefault();
+                props.onClickComment(props.story);
+              }}
+            >
+              {commentCount}
+              comments
+            </a>
+          ) : (
+            <span>
+              {commentCount}
+              comment
+            </span>
+          )}
         </InfoItem>
         <InfoItem>
           <a href={url} rel="noopener noreferrer" target="_blank">

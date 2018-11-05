@@ -3,4 +3,4 @@ import ReactDOM from "react-dom";
 
 import App from "./components/App";
 
-ReactDOM.createRoot(document.getElementById("app")).render(<App count={100} />);
+ReactDOM.render(<App count={100} />, document.getElementById("app"));
