@@ -1,15 +1,9 @@
-import React, { Suspense, useState, memo } from "react";
-import { unstable_createResource as createResource } from "react-cache";
-// import { scheduleCallback} from 'schedule';
-
+import React from "react";
 import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
-import { filterStories, fetchHackerNews, Story } from "../hackerNews";
-
-// This is only for proof ofconcept for React.lazy
 import HNStories from "./HNStories";
-const HNStoriesLazy = React.lazy<typeof HNStories>(() => import("./HNStories"));
+import { filterStories, fetchHackerNews, Story } from "../hackerNews";
 
 const Container = styled.main`
   margin: 0 auto;
@@ -38,40 +32,42 @@ interface Props {
   count: number;
 }
 
-const hackerNewsResource = createResource<Story[]>((count: number) =>
-  fetchHackerNews(count)
-);
+interface State {
+  filterText: string;
+  stories: Story[];
+}
 
-const HNStoriesResource = memo(
-  (props: { count: number; filterText: string }) => {
-    const stories = hackerNewsResource.read(props.count);
-    const filteredStories = filterStories(stories, props.filterText);
-    return <HNStoriesLazy stories={filteredStories} />;
+class App extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      filterText: "",
+      stories: []
+    };
+    this.onChangeFilterText = this.onChangeFilterText.bind(this);
   }
-);
-
-const defer = requestAnimationFrame;
-
-const App = (props: Props) => {
-  const [filterText, setFilterText] = useState("");
-  const [inputFilterText, setInputFilterText] = useState("");
-
-  return (
-    <Container>
-      <Header>
-        <HeaderTitle>HackerNews Stories</HeaderTitle>
-        <InputContainer
-          value={inputFilterText}
-          onChange={value => {
-            setInputFilterText(value);
-            defer(() => setFilterText(value));
-          }}
-        />
-      </Header>
-      <Suspense fallback="loading..." maxDuration={2000}>
-        <HNStoriesResource count={props.count} filterText={filterText} />
-      </Suspense>
-    </Container>
-  );
-};
+  componentDidMount() {
+    fetchHackerNews(this.props.count).then(stories =>
+      this.setState({ stories })
+    );
+  }
+  onChangeFilterText(filterText: string) {
+    this.setState({ filterText });
+  }
+  render() {
+    const { stories, filterText } = this.state;
+    return (
+      <Container>
+        <Header>
+          <HeaderTitle>HackerNews Stories</HeaderTitle>
+          <InputContainer
+            value={filterText}
+            onChange={this.onChangeFilterText}
+          />
+        </Header>
+        <HNStories stories={filterStories(stories, filterText)} />
+      </Container>
+    );
+  }
+}
 export default App;
