@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import styled from "styled-components";
-
-import { Comment } from "../hackerNews";
+import { unstable_createResource as createResource } from "react-cache";
+import { fetchHackerNewsComments, Comment } from "../hackerNews";
 
 interface Props {
-  comments?: Comment[];
+  commentIds: number[];
   onClose: () => void;
 }
 
@@ -48,22 +48,19 @@ const CloseButton = styled.button`
   }
 `;
 
-const HNComment = ({ comments, onClose }: Props) => (
+const commentsResource = createResource<Comment[]>(
+  ids => {
+    return fetchHackerNewsComments(ids);
+  },
+  ids => ids.sort().join()
+);
+
+const HNCommentWrapper = ({ onClose, commentIds }: Props) => (
   <ModalWrapper onClick={onClose}>
     <ModalContent>
-      <ul>
-        {comments &&
-          comments.map(comment => (
-            <li key={comment.id}>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: `${comment.text} (by ${comment.by})`
-                }}
-              />
-              <hr />
-            </li>
-          ))}
-      </ul>
+      <Suspense fallback="Loading!!!" maxDuration={1000}>
+        <HNComment commentIds={commentIds} onClose={onClose} />
+      </Suspense>
       <ButtonArea>
         <CloseButton onClick={onClose}>close</CloseButton>
       </ButtonArea>
@@ -71,4 +68,23 @@ const HNComment = ({ comments, onClose }: Props) => (
   </ModalWrapper>
 );
 
-export default HNComment;
+const HNComment = ({ commentIds, onClose }: Props) => {
+  const comments = commentsResource.read(commentIds);
+  return (
+    <ul>
+      {comments &&
+        comments.map(comment => (
+          <li key={comment.id}>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: `${comment.text} (by ${comment.by})`
+              }}
+            />
+            <hr />
+          </li>
+        ))}
+    </ul>
+  );
+};
+
+export default HNCommentWrapper;

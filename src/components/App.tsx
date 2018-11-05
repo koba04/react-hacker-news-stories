@@ -1,16 +1,13 @@
-import React from "react";
+import React, { lazy, useState, useEffect, Suspense } from "react";
+import { unstable_createResource as createResource } from "react-cache";
 import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
 import HNStories from "./HNStories";
-import {
-  filterStories,
-  fetchHackerNews,
-  fetchHackerNewsComments,
-  Story,
-  Comment
-} from "../hackerNews";
-import HNComment from "./HNComment";
+import { filterStories, fetchHackerNews, Story } from "../hackerNews";
+import HNCommentType from "./HNComment";
+
+const HNComment = lazy<typeof HNCommentType>(() => import("./HNComment"));
 
 const Container = styled.main`
   margin: 0 auto;
@@ -39,59 +36,60 @@ interface Props {
   count: number;
 }
 
-interface State {
-  filterText: string;
-  stories: Story[];
-  comments: Comment[];
-}
+const fetchHackerNewsResource = createResource<Story[]>((count: number) => {
+  return fetchHackerNews(count);
+});
 
-class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      filterText: "",
-      stories: [],
-      comments: []
-    };
-    this.onChangeFilterText = this.onChangeFilterText.bind(this);
-  }
-  componentDidMount() {
-    fetchHackerNews(this.props.count).then(stories =>
-      this.setState({ stories })
-    );
-  }
-  onChangeFilterText(filterText: string) {
-    this.setState({ filterText });
-  }
-  render() {
-    const { stories, filterText, comments } = this.state;
-    return (
-      <Container>
-        <Header>
-          <HeaderTitle>HackerNews Stories</HeaderTitle>
-          <InputContainer
-            value={filterText}
-            onChange={this.onChangeFilterText}
-          />
-        </Header>
-        <HNStories
-          stories={filterStories(stories, filterText)}
-          onClickComment={(story: Story) => {
-            fetchHackerNewsComments(story.kids).then(comments => {
-              this.setState({ comments }, () => {
-                window.scrollTo(0, 0);
-              });
-            });
+const HNStoriesWithResource = (props: {
+  count: number;
+  filterText: string;
+  onClickComment: (story: Story) => void;
+}) => {
+  const stories = fetchHackerNewsResource.read(props.count);
+  return (
+    <HNStories
+      stories={filterStories(stories, props.filterText)}
+      onClickComment={props.onClickComment}
+    />
+  );
+};
+
+const defer = requestAnimationFrame;
+
+const App = (props: Props) => {
+  const [filterText, setFilterText] = useState("");
+  const [inputFilterText, setInputFilterText] = useState("");
+  const [commentIds, setCommentIds] = useState<number[]>([]);
+  useEffect(
+    () => {
+      window.scrollTo(0, 0);
+    },
+    [commentIds]
+  );
+
+  return (
+    <Container>
+      <Header>
+        <HeaderTitle>HackerNews Stories</HeaderTitle>
+        <InputContainer
+          value={inputFilterText}
+          onChange={value => {
+            setInputFilterText(value);
+            defer(() => setFilterText(value));
           }}
         />
-        {comments.length > 0 && (
-          <HNComment
-            onClose={() => this.setState({ comments: [] })}
-            comments={comments}
-          />
-        )}
-      </Container>
-    );
-  }
-}
+      </Header>
+      <Suspense fallback="Now Loading...">
+        <HNStoriesWithResource
+          count={props.count}
+          filterText={filterText}
+          onClickComment={(story: Story) => setCommentIds(story.kids)}
+        />
+      </Suspense>
+      {commentIds.length > 0 && (
+        <HNComment commentIds={commentIds} onClose={() => setCommentIds([])} />
+      )}
+    </Container>
+  );
+};
 export default App;

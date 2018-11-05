@@ -1,6 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 
 import App from "./components/App";
 
-ReactDOM.render(<App count={100} />, document.getElementById("app"));
+ReactDOM.createRoot(document.getElementById("app")).render(
+  <Suspense fallback="loading...">
+    <App count={100} />
+  </Suspense>
+);

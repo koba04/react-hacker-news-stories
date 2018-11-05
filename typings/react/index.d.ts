@@ -10,6 +10,6 @@ declare module "react" {
   function lazy<T>(fn: () => Promise<any>): T;
   const Suspense: React.ComponentType<SuspenseProps>;
   function useState<T>(initialValue: T): [T, (value: T) => void];
-  function useEffect(fn: Function, deps: any[]): void;
-  function useMemo<T>(fn: (args: any) => T, deps: any[]): T;
+  function useEffect(fn: Function, deps?: any[]): void;
+  function useMemo<T>(fn: (args: any) => T, deps?: any[]): T;
 }
