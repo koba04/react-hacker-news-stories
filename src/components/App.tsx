@@ -1,22 +1,18 @@
-import React, {
-  lazy,
-  memo,
-  useCallback,
-  useState,
-  useEffect,
-  Suspense
-} from "react";
-import { unstable_createResource as createResource } from "react-cache";
+import React from "react";
 import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
 import HNStories from "./HNStories";
-import { filterStories, fetchHackerNews, Story } from "../hackerNews";
-import HNCommentType from "./HNComment";
+import {
+  filterStories,
+  fetchHackerNews,
+  Story,
+  fetchHackerNewsComments,
+  Comment
+} from "../hackerNews";
+import HNComment from "./HNComment";
 import Modal from "./Modal";
 import Loading from "./Loading";
-
-const HNComment = lazy<typeof HNCommentType>(() => import("./HNComment"));
 
 const Container = styled.main`
   min-height: 100vh;
@@ -52,72 +48,66 @@ interface Props {
   count: number;
 }
 
-const fetchHackerNewsResource = createResource<Story[]>((count: number) => {
-  return fetchHackerNews(count);
-});
+interface State {
+  filterText: string;
+  stories: Story[];
+  comments: Comment[];
+}
 
-const HNStoriesWithResource = memo(
-  (props: {
-    count: number;
-    filterText: string;
-    onClickComment: (story: Story) => void;
-  }) => {
-    const stories = fetchHackerNewsResource.read(props.count);
-    return (
-      <HNStories
-        stories={filterStories(stories, props.filterText)}
-        onClickComment={props.onClickComment}
-      />
+class App extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      filterText: "",
+      stories: [],
+      comments: []
+    };
+    this.handleUpdateComment = this.handleUpdateComment.bind(this);
+    this.handleUpdateFilterText = this.handleUpdateFilterText.bind(this);
+  }
+  componentDidMount() {
+    fetchHackerNews(this.props.count).then((stories: Story[]) =>
+      this.setState({ stories })
     );
   }
-);
-
-const defer = requestAnimationFrame;
-
-const App = (props: Props) => {
-  const [filterText, setFilterText] = useState("");
-  const [inputFilterText, setInputFilterText] = useState("");
-  const [commentIds, setCommentIds] = useState<number[]>([]);
-  useEffect(
-    () => {
-      window.scrollTo(0, 0);
-    },
-    [commentIds]
-  );
-
-  const onClickComment = useCallback((story: Story) => {
-    setCommentIds(story.kids);
-  }, []);
-
-  return (
-    <Container>
-      <Main>
-        <Header>
-          <HeaderTitle>HackerNews Stories</HeaderTitle>
-          <InputContainer
-            value={inputFilterText}
-            onChange={value => {
-              setInputFilterText(value);
-              defer(() => setFilterText(value));
-            }}
-          />
-        </Header>
-        <Suspense fallback={<Loading />} maxDuration={2000}>
-          <HNStoriesWithResource
-            count={props.count}
-            filterText={filterText}
-            onClickComment={onClickComment}
-          />
-        </Suspense>
-        {commentIds.length > 0 && (
-          <Modal onClose={() => setCommentIds([])}>
-            <Suspense fallback={<Loading />} maxDuration={4000}>
-              <HNComment commentIds={commentIds} />
-            </Suspense>
-          </Modal>
-        )}
-      </Main>
-    </Container>
-  );
-};
+  handleUpdateComment(comments: Comment[]) {
+    this.setState({ comments });
+  }
+  handleUpdateFilterText(filterText: string) {
+    this.setState({ filterText });
+  }
+  render() {
+    const { comments, filterText, stories } = this.state;
+    return (
+      <Container>
+        <Main>
+          <Header>
+            <HeaderTitle>HackerNews Stories</HeaderTitle>
+            <InputContainer
+              value={filterText}
+              onChange={this.handleUpdateFilterText}
+            />
+          </Header>
+          {stories.length === 0 ? (
+            <Loading />
+          ) : (
+            <HNStories
+              stories={filterStories(stories, filterText)}
+              onClickComment={(story: Story) => {
+                fetchHackerNewsComments(story.kids).then(
+                  this.handleUpdateComment
+                );
+              }}
+            />
+          )}
+          {comments.length > 0 && (
+            <Modal onClose={() => this.handleUpdateComment([])}>
+              <HNComment comments={comments} />
+            </Modal>
+          )}
+        </Main>
+      </Container>
+    );
+  }
+}
 export default App;

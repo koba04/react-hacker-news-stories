@@ -1,24 +1,15 @@
 import React from "react";
-import { unstable_createResource as createResource } from "react-cache";
-import { fetchHackerNewsComments, Comment } from "../hackerNews";
+import { Comment } from "../hackerNews";
 
 interface Props {
-  commentIds: number[];
+  comments: Comment[];
 }
 
-const commentsResource = createResource<Comment[]>(
-  ids => {
-    return fetchHackerNewsComments(ids);
-  },
-  ids => ids.sort().join()
-);
-
 const HNComment = (props: Props) => {
-  const comments = commentsResource.read(props.commentIds);
   return (
     <ul>
-      {comments &&
-        comments.map(comment => (
+      {props.comments &&
+        props.comments.map(comment => (
           <li key={comment.id}>
             <p
               dangerouslySetInnerHTML={{
