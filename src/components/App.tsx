@@ -1,11 +1,4 @@
-import React, {
-  lazy,
-  memo,
-  useCallback,
-  useState,
-  useEffect,
-  Suspense
-} from "react";
+import React, { lazy, memo, useCallback, useState, Suspense } from "react";
 import { unstable_createResource as createResource } from "react-cache";
 import styled from "styled-components";
 
@@ -78,12 +71,6 @@ const App = (props: Props) => {
   const [filterText, setFilterText] = useState("");
   const [inputFilterText, setInputFilterText] = useState("");
   const [commentIds, setCommentIds] = useState<number[]>([]);
-  useEffect(
-    () => {
-      window.scrollTo(0, 0);
-    },
-    [commentIds]
-  );
 
   const onClickComment = useCallback((story: Story) => {
     setCommentIds(story.kids);
