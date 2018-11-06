@@ -1,13 +1,9 @@
-import React, { Suspense } from "react";
-import styled from "styled-components";
+import React from "react";
 import { unstable_createResource as createResource } from "react-cache";
 import { fetchHackerNewsComments, Comment } from "../hackerNews";
 
-import Loading from "./Loading";
-
 interface Props {
   commentIds: number[];
-  onClose: () => void;
 }
 
 const commentsResource = createResource<Comment[]>(
@@ -17,7 +13,7 @@ const commentsResource = createResource<Comment[]>(
   ids => ids.sort().join()
 );
 
-const HNComment = (props: { commentIds: number[] }) => {
+const HNComment = (props: Props) => {
   const comments = commentsResource.read(props.commentIds);
   return (
     <ul>
