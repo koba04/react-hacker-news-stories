@@ -1,4 +1,4 @@
-import React, { lazy, memo, useCallback, useState, Suspense } from "react";
+import React, { lazy, useMemo, useCallback, useState, Suspense } from "react";
 import { unstable_createResource as createResource } from "react-cache";
 import styled from "styled-components";
 
@@ -49,21 +49,23 @@ const fetchHackerNewsResource = createResource<Story[]>((count: number) => {
   return fetchHackerNews(count);
 });
 
-const HNStoriesWithResource = memo(
-  (props: {
-    count: number;
-    filterText: string;
-    onClickComment: (story: Story) => void;
-  }) => {
-    const stories = fetchHackerNewsResource.read(props.count);
-    return (
-      <HNStories
-        stories={filterStories(stories, props.filterText)}
-        onClickComment={props.onClickComment}
-      />
-    );
-  }
-);
+const HNStoriesWithResource = (props: {
+  count: number;
+  filterText: string;
+  onClickComment: (story: Story) => void;
+}) => {
+  const stories = fetchHackerNewsResource.read(props.count);
+  const filteredStories = useMemo(
+    () => filterStories(stories, props.filterText),
+    [stories, props.filterText]
+  );
+  return (
+    <HNStories
+      stories={filteredStories}
+      onClickComment={props.onClickComment}
+    />
+  );
+};
 
 const defer = requestAnimationFrame;
 
@@ -73,7 +75,7 @@ const App = (props: Props) => {
   const [commentIds, setCommentIds] = useState<number[]>([]);
 
   const onClickComment = useCallback((story: Story) => {
-    setCommentIds(story.kids);
+    defer(() => setCommentIds(story.kids));
   }, []);
 
   return (
@@ -98,7 +100,7 @@ const App = (props: Props) => {
         </Suspense>
         {commentIds.length > 0 && (
           <Modal onClose={() => setCommentIds([])}>
-            <Suspense fallback={<Loading />} maxDuration={4000}>
+            <Suspense fallback={<Loading />} maxDuration={2000}>
               <HNComment commentIds={commentIds} />
             </Suspense>
           </Modal>

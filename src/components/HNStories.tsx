@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import HNStory from "./HNStory";
 import { Story } from "../hackerNews";
 
@@ -8,7 +8,7 @@ interface Props {
   onClickComment: (story: Story) => void;
 }
 
-const HNStories = (props: Props) => {
+const HNStories = memo((props: Props) => {
   return (
     <section className={props.className}>
       {props.stories.map(story => (
@@ -20,5 +20,5 @@ const HNStories = (props: Props) => {
       ))}
     </section>
   );
-};
+});
 export default HNStories;
