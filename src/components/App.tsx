@@ -94,13 +94,13 @@ const App = (props: Props) => {
             onClickComment={onClickComment}
           />
         </Suspense>
-        {commentIds.length > 0 && (
+        <div hidden={commentIds.length === 0}>
           <Modal onClose={() => setCommentIds([])}>
             <Suspense fallback={<Loading />} maxDuration={2000}>
               <HNComment commentIds={commentIds} />
             </Suspense>
           </Modal>
-        )}
+        </div>
       </Main>
     </Container>
   );
