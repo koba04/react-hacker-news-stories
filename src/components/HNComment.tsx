@@ -1,17 +1,9 @@
 import React from "react";
-import { unstable_createResource as createResource } from "react-cache";
-import { fetchHackerNewsComments, Comment } from "../hackerNews";
+import { commentsResource } from "../hackerNewsResource";
 
 interface Props {
   commentIds: number[];
 }
-
-const commentsResource = createResource<Comment[]>(
-  ids => {
-    return fetchHackerNewsComments(ids);
-  },
-  ids => ids.sort().join()
-);
 
 const HNComment = (props: Props) => {
   const comments = commentsResource.read(props.commentIds);

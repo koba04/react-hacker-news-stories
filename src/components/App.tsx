@@ -1,10 +1,10 @@
 import React, { lazy, useMemo, useCallback, useState, Suspense } from "react";
-import { unstable_createResource as createResource } from "react-cache";
 import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
 import HNStories from "./HNStories";
-import { filterStories, fetchHackerNews, Story } from "../hackerNews";
+import { filterStories, Story } from "../hackerNews";
+import { storiesResource } from "./../hackerNewsResource";
 import HNCommentType from "./HNComment";
 import Modal from "./Modal";
 import Loading from "./Loading";
@@ -45,16 +45,12 @@ interface Props {
   count: number;
 }
 
-const fetchHackerNewsResource = createResource<Story[]>((count: number) => {
-  return fetchHackerNews(count);
-});
-
 const HNStoriesWithResource = (props: {
   count: number;
   filterText: string;
   onClickComment: (story: Story) => void;
 }) => {
-  const stories = fetchHackerNewsResource.read(props.count);
+  const stories = storiesResource.read(props.count);
   const filteredStories = useMemo(
     () => filterStories(stories, props.filterText),
     [stories, props.filterText]
