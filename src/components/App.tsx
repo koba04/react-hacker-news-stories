@@ -1,10 +1,9 @@
-import React, { lazy, useMemo, useCallback, useState, Suspense } from "react";
+import React, { lazy, useCallback, useState, Suspense } from "react";
 import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
 import HNStories from "./HNStories";
-import { filterStories, Story } from "../hackerNews";
-import { storiesResource } from "./../hackerNewsResource";
+import { Story } from "../hackerNews";
 import HNCommentType from "./HNComment";
 import Header from "./Header";
 import Modal from "./Modal";
@@ -35,29 +34,10 @@ interface Props {
   count: number;
 }
 
-const HNStoriesWithResource = (props: {
-  count: number;
-  filterText: string;
-  onClickComment: (story: Story) => void;
-}) => {
-  const stories = storiesResource.read(props.count);
-  const filteredStories = useMemo(
-    () => filterStories(stories, props.filterText),
-    [stories, props.filterText]
-  );
-  return (
-    <HNStories
-      stories={filteredStories}
-      onClickComment={props.onClickComment}
-    />
-  );
-};
-
 const defer = requestAnimationFrame;
 
 const App = (props: Props) => {
   const [filterText, setFilterText] = useState("");
-  const [inputFilterText, setInputFilterText] = useState("");
   const [commentIds, setCommentIds] = useState<number[]>([]);
 
   const onClickComment = useCallback((story: Story) => {
@@ -68,16 +48,10 @@ const App = (props: Props) => {
     <Container>
       <Main>
         <Header title="HackerNews Stories">
-          <InputContainer
-            value={inputFilterText}
-            onChange={value => {
-              setInputFilterText(value);
-              defer(() => setFilterText(value));
-            }}
-          />
+          <InputContainer onChange={setFilterText} />
         </Header>
         <Suspense fallback={<Loading />} maxDuration={2000}>
-          <HNStoriesWithResource
+          <HNStories
             count={props.count}
             filterText={filterText}
             onClickComment={onClickComment}

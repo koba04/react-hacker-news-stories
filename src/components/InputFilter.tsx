@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface Props {
   className?: string;
-  value: string;
   onChange: (value: string) => void;
 }
 
+const defer = requestAnimationFrame;
+
 const InputFilter = (props: Props) => {
+  const [filterText, setFilterText] = useState("");
+
   return (
     <div>
       <input
         className={props.className}
         type="text"
         placeholder="input text for filtering"
-        value={props.value}
-        onChange={e => props.onChange(e.target.value)}
+        value={filterText}
+        onChange={e => {
+          const { value } = e.target;
+          setFilterText(value);
+          defer(() => props.onChange(value));
+        }}
       />
     </div>
   );
