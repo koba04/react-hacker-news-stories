@@ -29,7 +29,7 @@ const Title = styled.div`
 
 const InfoBox = styled.div`
   padding: 5px;
-  flex: 0 0 20%;
+  flex: 0 0 25%;
   word-wrap: break-word;
   align-self: center;
   @media (max-width: 768px) {
