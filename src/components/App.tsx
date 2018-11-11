@@ -6,6 +6,7 @@ import HNStories from "./HNStories";
 import { filterStories, Story } from "../hackerNews";
 import { storiesResource } from "./../hackerNewsResource";
 import HNCommentType from "./HNComment";
+import Header from "./Header";
 import Modal from "./Modal";
 import Loading from "./Loading";
 import Prerender from "./Prerender";
@@ -22,18 +23,6 @@ const Main = styled.section`
   max-width: 900px;
   margin: 0 auto;
   background-color: #fff;
-`;
-
-const Header = styled.header`
-  display: flex;
-  position: sticky;
-  top: 0;
-  background-color: #fff;
-`;
-
-const HeaderTitle = styled.h1`
-  flex-grow: 1;
-  margin: 10px;
 `;
 
 const InputContainer = styled(InputFilter)`
@@ -78,8 +67,7 @@ const App = (props: Props) => {
   return (
     <Container>
       <Main>
-        <Header>
-          <HeaderTitle>HackerNews Stories</HeaderTitle>
+        <Header title="HackerNews Stories">
           <InputContainer
             value={inputFilterText}
             onChange={value => {
