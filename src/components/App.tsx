@@ -8,6 +8,7 @@ import { storiesResource } from "./../hackerNewsResource";
 import HNCommentType from "./HNComment";
 import Modal from "./Modal";
 import Loading from "./Loading";
+import Prerender from "./Prerender";
 
 const HNComment = lazy<typeof HNCommentType>(() => import("./HNComment"));
 
@@ -94,13 +95,13 @@ const App = (props: Props) => {
             onClickComment={onClickComment}
           />
         </Suspense>
-        <div hidden={commentIds.length === 0}>
+        <Prerender visible={commentIds.length > 0}>
           <Modal onClose={() => setCommentIds([])}>
             <Suspense fallback={<Loading />} maxDuration={2000}>
               <HNComment commentIds={commentIds} />
             </Suspense>
           </Modal>
-        </div>
+        </Prerender>
       </Main>
     </Container>
   );
