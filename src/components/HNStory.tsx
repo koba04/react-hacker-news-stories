@@ -4,24 +4,40 @@ import { Story } from "../hackerNews";
 
 const StoryBox = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 `;
 
 const Rank = styled.div`
   font-size: 2em;
-  flex-basis: 50px;
+  flex: 0 0 60px;
   text-align: center;
+  vertical-align: middle;
   padding: 5px;
+
+  @media (max-width: 768px) {
+    flex: 0 0 45px;
+    padding-bottom: 0;
+  }
 `;
 
 const Title = styled.div`
   font-size: 1.2em;
   align-self: center;
-  flex-basis: 550px;
+  flex: 1;
 `;
 
 const InfoBox = styled.div`
   padding: 5px;
+  flex: 0 0 20%;
+  word-wrap: break-word;
   align-self: center;
+  @media (max-width: 768px) {
+    flex: 100%;
+    text-align: right;
+    margin-top: -5px;
+    margin-bottom: 5px;
+  }
 `;
 
 const InfoItem = styled.span`
