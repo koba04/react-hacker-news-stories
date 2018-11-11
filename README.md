@@ -1,16 +1,8 @@
-# React HackerNews Stories
+# A HackerNews Stories App with React
 
-React sample app using HackerNews API for #html5j.
+A sample app using HackerNews API and React.
 
 ```
 npm install
-npm run
+npm start
 ```
-
-## Flux version
-
-* https://github.com/koba04/react-hacker-news-stories/tree/flux
-
-## React.js meetup \#1 livecoding
-
-* https://github.com/koba04/react-hacker-news-stories/tree/meetup
