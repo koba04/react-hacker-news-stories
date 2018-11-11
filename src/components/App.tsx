@@ -38,7 +38,7 @@ const defer = requestAnimationFrame;
 
 const App = (props: Props) => {
   const [filterText, setFilterText] = useState("");
-  const [commentIds, setCommentIds] = useState<number[]>([]);
+  const [commentIds, setCommentIds] = useState([] as number[]);
 
   const onClickComment = useCallback((story: Story) => {
     defer(() => setCommentIds(story.kids));
