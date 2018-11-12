@@ -7,13 +7,9 @@ import {
   Comment
 } from "./hackerNews";
 
-export const storiesResource = createResource<Story[]>((count: number) => {
-  return fetchHackerNews(count);
-});
+export const storiesResource = createResource<Story[]>(fetchHackerNews);
 
 export const commentsResource = createResource<Comment[]>(
-  ids => {
-    return fetchHackerNewsComments(ids);
-  },
+  fetchHackerNewsComments,
   ids => ids.sort().join()
 );
