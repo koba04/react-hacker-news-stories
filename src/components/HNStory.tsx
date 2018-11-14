@@ -87,4 +87,4 @@ const HNStory = (props: Props) => {
     </StoryBox>
   );
 };
-export default React.memo(HNStory);
+export default HNStory;
