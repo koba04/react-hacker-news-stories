@@ -1,19 +1,16 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import styled from "styled-components";
 
 import InputFilter from "./InputFilter";
 import HNStories from "./HNStories";
-import {
-  filterStories,
-  fetchHackerNews,
-  Story,
-  fetchHackerNewsComments,
-  Comment
-} from "../hackerNews";
-import HNComment from "./HNComment";
+import { HNCommentType } from "./HNComment";
+import { Story, fetchHackerNewsComments, Comment } from "../hackerNews";
 import Header from "./Header";
 import Modal from "./Modal";
+import Prerender from "./Prerender";
 import Loading from "./Loading";
+
+const HNComment = lazy<HNCommentType>(() => import("./HNComment"));
 
 const Container = styled.main`
   min-height: 100vh;
@@ -39,8 +36,7 @@ interface Props {
 
 interface State {
   filterText: string;
-  stories: Story[];
-  comments: Comment[];
+  commentIds: number[];
 }
 
 class App extends React.Component<Props, State> {
@@ -48,25 +44,24 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       filterText: "",
-      stories: [],
-      comments: []
+      commentIds: []
     };
     this.handleUpdateComment = this.handleUpdateComment.bind(this);
     this.handleUpdateFilterText = this.handleUpdateFilterText.bind(this);
   }
-  componentDidMount() {
-    fetchHackerNews(this.props.count).then((stories: Story[]) =>
-      this.setState({ stories })
-    );
-  }
-  handleUpdateComment(comments: Comment[]) {
-    this.setState({ comments });
+  handleUpdateComment(commentIds: number[]) {
+    this.setState({ commentIds });
   }
   handleUpdateFilterText(filterText: string) {
     this.setState({ filterText });
   }
   render() {
-    const { comments, filterText, stories } = this.state;
+    const { commentIds, filterText } = this.state;
+
+    const onClickComment = (story: Story) => {
+      this.handleUpdateComment(story.kids);
+    };
+
     return (
       <Container>
         <Main>
@@ -76,23 +71,18 @@ class App extends React.Component<Props, State> {
               onChange={this.handleUpdateFilterText}
             />
           </Header>
-          {stories.length === 0 ? (
-            <Loading />
-          ) : (
-            <HNStories
-              stories={filterStories(stories, filterText)}
-              onClickComment={(story: Story) => {
-                fetchHackerNewsComments(story.kids).then(
-                  this.handleUpdateComment
-                );
-              }}
-            />
-          )}
-          {comments.length > 0 && (
+          <HNStories
+            count={this.props.count}
+            filterText={filterText}
+            onClickComment={onClickComment}
+          />
+          <Prerender visible={commentIds.length > 0}>
             <Modal onClose={() => this.handleUpdateComment([])}>
-              <HNComment comments={comments} />
+              <Suspense fallback={<Loading />}>
+                <HNComment commentIds={commentIds} />
+              </Suspense>
             </Modal>
-          )}
+          </Prerender>
         </Main>
       </Container>
     );

@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
 import HNStory from "./HNStory";
-import { Story } from "../hackerNews";
+import { Story, filterStories } from "../hackerNews";
+import { storiesResouce } from "../hackerNewsResource";
 
 interface Props {
   className?: string;
-  stories: Story[];
+  count: number;
+  filterText: string;
   onClickComment: (story: Story) => void;
 }
 
 const HNStories = (props: Props) => {
+  const stories = storiesResouce.read(props.count);
+  const filteredStories = useMemo(
+    () => filterStories(stories, props.filterText),
+    [stories, props.filterText]
+  );
+
   return (
     <section className={props.className}>
-      {props.stories.map(story => (
+      {filteredStories.map(story => (
         <HNStory
           key={story.id}
           story={story}
