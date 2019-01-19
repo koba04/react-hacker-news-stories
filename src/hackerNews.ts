@@ -41,7 +41,7 @@ export const fetchHackerNewsComments = async (
         `https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`
       ).then(res => res.json())
     )
-  );
+  ).then(comments => comments.filter(Boolean));
 };
 
 export const filterStories = (
