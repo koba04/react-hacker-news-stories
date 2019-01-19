@@ -1,7 +1,6 @@
-import React, { memo, useMemo } from "react";
+import React from "react";
 import HNStory from "./HNStory";
-import { filterStories, Story } from "../hackerNews";
-import { storiesResource } from "./../hackerNewsResource";
+import { Story } from "../hackerNews";
 
 interface Props {
   className?: string;
@@ -9,25 +8,7 @@ interface Props {
   onClickComment: (story: Story) => void;
 }
 
-const HNStoriesWithResource = (props: {
-  count: number;
-  filterText: string;
-  onClickComment: (story: Story) => void;
-}) => {
-  const stories = storiesResource.read(props.count);
-  const filteredStories = useMemo(
-    () => filterStories(stories, props.filterText),
-    [stories, props.filterText]
-  );
-  return (
-    <HNStories
-      stories={filteredStories}
-      onClickComment={props.onClickComment}
-    />
-  );
-};
-
-const HNStories = memo((props: Props) => {
+const HNStories = (props: Props) => {
   return (
     <section className={props.className}>
       {props.stories.map(story => (
@@ -39,6 +20,6 @@ const HNStories = memo((props: Props) => {
       ))}
     </section>
   );
-});
+};
 
-export default HNStoriesWithResource;
+export default HNStories;

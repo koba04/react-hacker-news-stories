@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Story } from "../hackerNews";
 
@@ -50,7 +50,7 @@ interface Props {
   onClickComment: (story: Story) => void;
 }
 
-const HNStory = memo((props: Props) => {
+const HNStory = (props: Props) => {
   const { rank, url, title, by, kids } = props.story;
   const commentCount = kids ? kids.length : 0;
   return (
@@ -86,5 +86,5 @@ const HNStory = memo((props: Props) => {
       </InfoBox>
     </StoryBox>
   );
-});
+};
 export default HNStory;
