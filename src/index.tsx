@@ -5,7 +5,7 @@ import App from "./components/App";
 import Loading from "./components/Loading";
 
 ReactDOM.createRoot(document.getElementById("app")).render(
-  <Suspense fallback={<Loading />} maxDuration={5000}>
+  <Suspense fallback={<Loading />} maxDuration={2000}>
     <App count={100} />
   </Suspense>
 );
