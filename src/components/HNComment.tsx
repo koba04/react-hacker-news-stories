@@ -1,14 +1,16 @@
 import React from "react";
 import { Comment } from "../hackerNews";
+import { commentsResource } from "../hackerNewsResource";
 
 interface Props {
-  comments: Comment[];
+  commentIds: number[];
 }
 
 const HNComment = (props: Props) => {
+  const comments = commentsResource.read(props.commentIds);
   return (
     <ul>
-      {props.comments.map(comment => (
+      {comments.map(comment => (
         <li key={comment.id}>
           <p
             dangerouslySetInnerHTML={{
