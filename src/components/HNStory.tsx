@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useTransition } from "react";
 import styled from "styled-components";
 import { Story } from "../hackerNews";
 
@@ -54,6 +54,10 @@ const HNStory = memo((props: Props) => {
   const { rank, url, title, by, kids } = props.story;
   const commentCount = kids ? kids.length : 0;
 
+  const [startTransition, isPending] = useTransition({
+    timeoutMs: 2000
+  });
+
   return (
     <StoryBox>
       <Rank>{rank}</Rank>
@@ -66,11 +70,12 @@ const HNStory = memo((props: Props) => {
               href=""
               onClick={e => {
                 e.preventDefault();
-                props.onClickComment(props.story);
+                startTransition(() => {
+                  props.onClickComment(props.story);
+                });
               }}
             >
-              {commentCount}
-              comments
+              {isPending ? 'Loading...' : `${commentCount}comments`}
             </a>
           ) : (
             <span>

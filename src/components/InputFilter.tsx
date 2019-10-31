@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useDeferredValue } from "react";
 
 interface Props {
   className?: string;
@@ -7,6 +7,10 @@ interface Props {
 
 const InputFilter = (props: Props) => {
   const [filterText, setFilterText] = useState("");
+  const deferredFilterText = useDeferredValue(filterText, {
+    timeoutMs: 3000
+  });
+
 
   return (
     <div>
@@ -18,7 +22,7 @@ const InputFilter = (props: Props) => {
         onChange={e => {
           const { value } = e.target;
           setFilterText(value);
-          props.onChange(value);
+          props.onChange(deferredFilterText);
         }}
       />
     </div>
