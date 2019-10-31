@@ -5,8 +5,6 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-const defer = requestAnimationFrame;
-
 const InputFilter = (props: Props) => {
   const [filterText, setFilterText] = useState("");
 
@@ -20,7 +18,7 @@ const InputFilter = (props: Props) => {
         onChange={e => {
           const { value } = e.target;
           setFilterText(value);
-          defer(() => props.onChange(value));
+          props.onChange(value);
         }}
       />
     </div>

@@ -34,14 +34,12 @@ interface Props {
   count: number;
 }
 
-const defer = requestAnimationFrame;
-
 const App = (props: Props) => {
   const [filterText, setFilterText] = useState("");
   const [commentIds, setCommentIds] = useState([] as number[]);
 
   const onClickComment = useCallback((story: Story) => {
-    defer(() => setCommentIds(story.kids));
+    setCommentIds(story.kids)
   }, []);
 
   return (
@@ -50,7 +48,7 @@ const App = (props: Props) => {
         <Header title="HackerNews Stories">
           <InputContainer onChange={setFilterText} />
         </Header>
-        <Suspense fallback={<Loading />} maxDuration={2000}>
+        <Suspense fallback={<Loading />}>
           <HNStories
             count={props.count}
             filterText={filterText}
@@ -59,9 +57,7 @@ const App = (props: Props) => {
         </Suspense>
         <Prerender visible={commentIds.length > 0}>
           <Modal onClose={() => setCommentIds([])}>
-            <Suspense fallback={<Loading />} maxDuration={2000}>
-              <HNComment commentIds={commentIds} />
-            </Suspense>
+            <HNComment commentIds={commentIds} />
           </Modal>
         </Prerender>
       </Main>

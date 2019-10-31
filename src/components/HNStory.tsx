@@ -53,6 +53,7 @@ interface Props {
 const HNStory = memo((props: Props) => {
   const { rank, url, title, by, kids } = props.story;
   const commentCount = kids ? kids.length : 0;
+
   return (
     <StoryBox>
       <Rank>{rank}</Rank>
