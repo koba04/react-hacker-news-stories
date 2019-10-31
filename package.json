@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open --devtool cheap-module-source-map",
     "lint": "tsc",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "postinstall": "patch-package"
   },
   "author": "koba04",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "@types/styled-components": "^4.1.20",
     "babel-loader": "^8.0.6",
     "babel-plugin-styled-components": "^1.10.6",
+    "patch-package": "^6.2.0",
     "prettier": "^1.18.2",
     "typescript": "^3.6.4",
     "webpack": "^4.41.2",

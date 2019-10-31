@@ -17,12 +17,6 @@ module.exports = {
     ]
   },
   resolve: {
-    alias: {
-      "react-cache": path.resolve(
-        __dirname,
-        "builds/react-cache.development.js"
-      )
-    },
     extensions: [".js", ".ts", ".tsx"]
   },
   devServer: {
