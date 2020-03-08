@@ -1,7 +1,16 @@
 diff --git a/node_modules/react-cache/cjs/react-cache.development.js b/node_modules/react-cache/cjs/react-cache.development.js
-index 0181269..2164f27 100644
+index 0181269..982f2a8 100644
 --- a/node_modules/react-cache/cjs/react-cache.development.js
 +++ b/node_modules/react-cache/cjs/react-cache.development.js
+@@ -11,7 +11,7 @@
+ 
+ 
+ 
+-if (process.env.NODE_ENV !== "production") {
++// if (process.env.NODE_ENV !== "production") {
+   (function() {
+ 'use strict';
+ 
 @@ -238,10 +238,10 @@ var Pending = 0;
  var Resolved = 1;
  var Rejected = 2;
@@ -15,6 +24,12 @@ index 0181269..2164f27 100644
    if (dispatcher === null) {
      throw new Error('react-cache: read and preload may only be called from within a ' + "component's render. They are not supported in event handlers or " + 'lifecycle methods.');
    }
+@@ -355,4 +355,4 @@ function unstable_setGlobalCacheLimit(limit) {
+ exports.unstable_createResource = unstable_createResource;
+ exports.unstable_setGlobalCacheLimit = unstable_setGlobalCacheLimit;
+   })();
+-}
++//}
 diff --git a/node_modules/react-cache/index.js b/node_modules/react-cache/index.js
 index 2b4d5ae..fe6cd69 100644
 --- a/node_modules/react-cache/index.js
