@@ -12,7 +12,7 @@
   "author": "koba04",
   "license": "MIT",
   "dependencies": {
-    "react": "0.0.0-experimental-235a6c4af",
+    "react": "0.14.0",
     "react-cache": "^2.0.0-alpha.1",
     "react-dom": "0.0.0-experimental-235a6c4af",
     "styled-components": "^4.4.1"
