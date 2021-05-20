@@ -6,14 +6,12 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open --devtool cheap-module-source-map",
     "lint": "tsc",
-    "build": "webpack --mode production",
-    "postinstall": "patch-package"
+    "build": "webpack --mode production"
   },
   "author": "koba04",
   "license": "MIT",
   "dependencies": {
     "react": "0.0.0-experimental-235a6c4af",
-    "react-cache": "^2.0.0-alpha.1",
     "react-dom": "0.0.0-experimental-235a6c4af",
     "styled-components": "^4.4.1",
     "swr": "^0.5.6"
@@ -31,7 +29,6 @@
     "@types/styled-components": "^4.1.20",
     "babel-loader": "^8.0.6",
     "babel-plugin-styled-components": "^1.10.7",
-    "patch-package": "^6.2.1",
     "prettier": "^1.19.1",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0",
