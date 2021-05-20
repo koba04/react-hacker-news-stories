@@ -1,12 +1,12 @@
 import React from "react";
-import { commentsResource } from "../hackerNewsResource";
+import { useCommentsResource } from "../hackerNewsResource";
 
 interface Props {
   commentIds: number[];
 }
 
 const HNComment = (props: Props) => {
-  const comments = commentsResource.read(props.commentIds);
+  const { data: comments } = useCommentsResource(props.commentIds);
   return (
     <ul>
       {comments &&

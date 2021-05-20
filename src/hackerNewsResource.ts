@@ -1,15 +1,12 @@
-import { unstable_createResource as createResource } from "react-cache";
+
+import useSWR from "swr";
 
 import {
   fetchHackerNews,
   fetchHackerNewsComments,
-  Story,
-  Comment
 } from "./hackerNews";
 
-export const storiesResource = createResource<number, Story[]>(fetchHackerNews);
+export const useStoriesResource = (count: number) => useSWR('storeis', () => fetchHackerNews(count), { suspense: true });
 
-export const commentsResource = createResource<number[], Comment[]>(
-  fetchHackerNewsComments,
-  ids => ids.sort().join()
-);
+export const useCommentsResource = (ids: number[]) => useSWR(['comment', ids.sort()], (_, ids) => fetchHackerNewsComments(ids), { suspense: true });
+

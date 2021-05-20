@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import HNStory from "./HNStory";
 import { filterStories, Story } from "../hackerNews";
-import { storiesResource } from "./../hackerNewsResource";
+import { useStoriesResource } from "./../hackerNewsResource";
 
 interface Props {
   className?: string;
@@ -14,9 +14,9 @@ const HNStoriesWithResource = (props: {
   filterText: string;
   onClickComment: (story: Story) => void;
 }) => {
-  const stories = storiesResource.read(props.count);
+  const { data: stories } = useStoriesResource(props.count);
   const filteredStories = useMemo(
-    () => filterStories(stories, props.filterText),
+    () => filterStories(stories!, props.filterText),
     [stories, props.filterText]
   );
   return (
