@@ -7,10 +7,7 @@ interface Props {
 
 const InputFilter = (props: Props) => {
   const [filterText, setFilterText] = useState("");
-  const deferredFilterText = useDeferredValue(filterText, {
-    timeoutMs: 3000
-  });
-
+  const deferredFilterText = useDeferredValue(filterText)
 
   return (
     <div>

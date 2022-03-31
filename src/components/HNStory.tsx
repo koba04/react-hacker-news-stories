@@ -54,9 +54,7 @@ const HNStory = memo((props: Props) => {
   const { rank, url, title, by, kids } = props.story;
   const commentCount = kids ? kids.length : 0;
 
-  const [startTransition, isPending] = useTransition({
-    timeoutMs: 2000
-  });
+  const [isPending, startTransition] = useTransition();
 
   return (
     <StoryBox>
