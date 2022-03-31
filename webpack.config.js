@@ -12,7 +12,10 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?/,
-        use: "babel-loader"
+        exclude: /(node_modules)/,
+        use: {
+          loader: "swc-loader"
+        }
       }
     ]
   },
@@ -20,6 +23,8 @@ module.exports = {
     extensions: [".js", ".ts", ".tsx"]
   },
   devServer: {
-    contentBase: "./public"
+    static: {
+      directory: path.join(__dirname, 'public')
+    }
   }
 };
